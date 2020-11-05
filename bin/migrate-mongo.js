@@ -19,7 +19,14 @@ function handleError(err) {
 
 function printStatusTable(statusItems) {
   const table = new Table({ head: ["Filename", "Applied At"] });
-  statusItems.forEach(item => table.push(_.values(item)));
+  statusItems.forEach(item => { 
+  
+    if(item.hashOk === false) {
+      item.appliedAt += ' [CHANGED]'
+    }
+    delete item.hashOk;
+    table.push(_.values(item))}
+  );
   console.log(table.toString());
 }
 
