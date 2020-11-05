@@ -20,12 +20,12 @@ function handleError(err) {
 function printStatusTable(statusItems) {
   const table = new Table({ head: ["Filename", "Applied At"] });
   statusItems.forEach(item => { 
-  
-    if(item.hashOk === false) {
-      item.appliedAt += ' [CHANGED]'
+    const changeLogItem = item;
+    if(changeLogItem.appliedAt !== "PENDING" && changeLogItem.hashOk === false) {
+      changeLogItem.appliedAt += ' [CHANGED]'
     }
-    delete item.hashOk;
-    table.push(_.values(item))}
+    delete changeLogItem.hashOk;
+    table.push(_.values(changeLogItem))}
   );
   console.log(table.toString());
 }
