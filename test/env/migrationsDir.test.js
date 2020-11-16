@@ -16,6 +16,10 @@ describe("migrationsDir", () => {
     };
   }
 
+  function mockReadDir() {
+    return sinon.stub();
+  }
+
   function mockConfig() {
     return {
       read: sinon.stub().returns({
@@ -27,9 +31,11 @@ describe("migrationsDir", () => {
 
   beforeEach(() => {
     fs = mockFs();
+    readDir = mockReadDir();
     config = mockConfig();
     migrationsDir = proxyquire("../../lib/env/migrationsDir", {
       "fs-extra": fs,
+      "fs-readdir-recursive": readDir,
       "./config": config
     });
   });
@@ -112,7 +118,7 @@ describe("migrationsDir", () => {
 
   describe("getFileNames()", () => {
     it("should read the directory and yield the result", async () => {
-      fs.readdir.returns(Promise.resolve(["file1.js", "file2.js"]));
+      readDir.returns(Promise.resolve(["file1.js", "file2.js"]));
       const files = await migrationsDir.getFileNames();
       expect(files).to.deep.equal(["file1.js", "file2.js"]);
     });
@@ -121,13 +127,13 @@ describe("migrationsDir", () => {
       config.read.returns({
         migrationFileExtension: ".ts"
       });
-      fs.readdir.returns(Promise.resolve(["file1.ts", "file2.ts", "file1.js", "file2.js", ".keep"]));
+      readDir.returns(Promise.resolve(["file1.ts", "file2.ts", "file1.js", "file2.js", ".keep"]));
       const files = await migrationsDir.getFileNames();
       expect(files).to.deep.equal(["file1.ts", "file2.ts"]);
     });
 
     it("should yield errors that occurred while reading the dir", async () => {
-      fs.readdir.returns(Promise.reject(new Error("Could not read")));
+      readDir.returns(Promise.reject(new Error("Could not read")));
       try {
         await migrationsDir.getFileNames();
         expect.fail("Error was not thrown");
@@ -137,7 +143,7 @@ describe("migrationsDir", () => {
     });
 
     it("should be sorted in alphabetical order", async () => {
-      fs.readdir.returns(Promise.resolve([
+      readDir.returns(Promise.resolve([
         "20201014172343-test.js",
         "20201014172356-test3.js",
         "20201014172354-test2.js",

@@ -158,15 +158,18 @@ describe("status", () => {
     expect(statusItems).to.deep.equal([
       {
         appliedAt: "2016-06-03T20:10:12.123Z",
-        fileName: "20160509113224-first_migration.js"
+        fileName: "20160509113224-first_migration.js",
+        hashOk: false
       },
       {
         appliedAt: "2016-06-09T20:10:12.123Z",
-        fileName: "20160512091701-second_migration.js"
+        fileName: "20160512091701-second_migration.js",
+        hashOk: false
       },
       {
         appliedAt: "PENDING",
-        fileName: "20160513155321-third_migration.js"
+        fileName: "20160513155321-third_migration.js",
+        hashOk: true
       }
     ]);
   });
