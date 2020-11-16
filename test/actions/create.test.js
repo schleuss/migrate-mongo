@@ -84,7 +84,7 @@ describe("create", () => {
     expect(fs.copy.getCall(0).args[1]).to.equal(
       path.join(process.cwd(), "migrations", "20160609080700-my_description.js")
     );
-    expect(filename).to.equal("20160609080700-my_description.js");
+    expect(filename).to.equal("migrations/20160609080700-my_description.js");
     clock.restore();
   });
 
@@ -101,7 +101,7 @@ describe("create", () => {
     expect(fs.copy.getCall(0).args[1]).to.equal(
       path.join(process.cwd(), "migrations", "20160609080700-my_description.ts")
     );
-    expect(filename).to.equal("20160609080700-my_description.ts");
+    expect(filename).to.equal("migrations/20160609080700-my_description.ts");
     clock.restore();
   });
 
@@ -148,7 +148,7 @@ describe("create", () => {
     expect(fs.copy.getCall(0).args[1]).to.equal(
         path.join(process.cwd(), "migrations", "20160609080700-my_description.js")
     );
-    expect(filename).to.equal("20160609080700-my_description.js");
+    expect(filename).to.equal("migrations/20160609080700-my_description.js");
     clock.restore();
   });
 });
