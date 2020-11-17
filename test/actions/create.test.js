@@ -1,4 +1,6 @@
-const { expect } = require("chai");
+const {
+  expect
+} = require("chai");
 const sinon = require("sinon");
 const path = require("path");
 
@@ -84,7 +86,7 @@ describe("create", () => {
     expect(fs.copy.getCall(0).args[1]).to.equal(
       path.join(process.cwd(), "migrations", "20160609080700-my_description.js")
     );
-    expect(filename).to.equal("migrations/20160609080700-my_description.js");
+    expect(filename).to.equal("migrations" + path.sep + "20160609080700-my_description.js");
     clock.restore();
   });
 
@@ -101,7 +103,7 @@ describe("create", () => {
     expect(fs.copy.getCall(0).args[1]).to.equal(
       path.join(process.cwd(), "migrations", "20160609080700-my_description.ts")
     );
-    expect(filename).to.equal("migrations/20160609080700-my_description.ts");
+    expect(filename).to.equal("migrations" + path.sep + "20160609080700-my_description.ts");
     clock.restore();
   });
 
@@ -136,19 +138,19 @@ describe("create", () => {
 
   it("should use the sample migration file if it exists", async () => {
     const clock = sinon.useFakeTimers(
-        new Date("2016-06-09T08:07:00.077Z").getTime()
+      new Date("2016-06-09T08:07:00.077Z").getTime()
     );
     migrationsDir.doesSampleMigrationExist.returns(true);
     const filename = await create("my_description");
     expect(migrationsDir.doesSampleMigrationExist.called).to.equal(true);
     expect(fs.copy.called).to.equal(true);
     expect(fs.copy.getCall(0).args[0]).to.equal(
-        path.join(process.cwd(), "migrations", "sample-migration.js")
+      path.join(process.cwd(), "migrations", "sample-migration.js")
     );
     expect(fs.copy.getCall(0).args[1]).to.equal(
-        path.join(process.cwd(), "migrations", "20160609080700-my_description.js")
+      path.join(process.cwd(), "migrations", "20160609080700-my_description.js")
     );
-    expect(filename).to.equal("migrations/20160609080700-my_description.js");
+    expect(filename).to.equal("migrations" + path.sep + "20160609080700-my_description.js");
     clock.restore();
   });
 });
