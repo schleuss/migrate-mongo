@@ -18,7 +18,7 @@ function handleError(err) {
 }
 
 function printStatusTable(statusItems) {
-    const table = new Table({ head: ["Filename", "Applied At"] });
+    const table = new Table({ head: ["Filename", "Applied At", "Hash"] });
     statusItems.forEach(item => {
         const changeLogItem = item;
         if (changeLogItem.appliedAt !== "PENDING" && changeLogItem.hashOk === false) {
@@ -111,6 +111,24 @@ program
         migrateMongo.database
             .connect()
             .then(({ db, client }) => migrateMongo.status(db, client))
+            .then(statusItems => {
+                printStatusTable(statusItems);
+                process.exit(0);
+            })
+            .catch(err => {
+                handleError(err);
+            });
+    });
+
+program
+    .command("rehash")
+    .description("Update de hash of changed files on database")
+    .option("-f --file <file>", "use a custom config file")
+    .action(options => {
+        global.options = options;
+        migrateMongo.database
+            .connect()
+            .then(({ db, client }) => migrateMongo.rehash(db, client))
             .then(statusItems => {
                 printStatusTable(statusItems);
                 process.exit(0);
