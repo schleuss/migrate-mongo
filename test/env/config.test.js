@@ -1,8 +1,7 @@
-const { expect } = require("chai");
-const sinon = require("sinon");
-const proxyquire = require("proxyquire");
-
-const path = require("path");
+import { expect } from "chai";
+import sinon from "sinon";
+import esmock from 'esmock';
+import path from "path";
 
 describe("config", () => {
   let config; // module under test
@@ -14,9 +13,9 @@ describe("config", () => {
     };
   }
 
-  beforeEach(() => {
+  beforeEach(async () => {
     fs = mockFs();
-    config = proxyquire("../../lib/env/config", { "fs-extra": fs });
+    config = await esmock("../../lib/env/config", { "fs-extra": fs });
   });
 
   describe("shouldExist()", () => {

@@ -1,13 +1,13 @@
-const { expect } = require("chai");
-const sinon = require("sinon");
-const proxyquire = require("proxyquire");
-
-const path = require("path");
+import { expect } from "chai";
+import sinon from "sinon";
+import esmock from 'esmock';
+import path from "path";
 
 describe("migrationsDir", () => {
   let migrationsDir;
   let fs;
   let config;
+  let readDir;
 
   function mockFs() {
     return {
@@ -29,14 +29,14 @@ describe("migrationsDir", () => {
     };
   }
 
-  beforeEach(() => {
+  beforeEach(async () => {
     fs = mockFs();
     readDir = mockReadDir();
     config = mockConfig();
-    migrationsDir = proxyquire("../../lib/env/migrationsDir", {
+    migrationsDir = await esmock("../../lib/env/migrationsDir.js", {
       "fs-extra": fs,
       "fs-readdir-recursive": readDir,
-      "./config": config
+      "../../lib/env/config.js": config
     });
   });
 

@@ -1,6 +1,6 @@
-const { expect } = require("chai");
+import { expect } from "chai";
 
-const hasCallback = require('../../lib/utils/has-callback');
+import hasCallback from '../../lib/utils/has-callback.js';
 
 describe('has-callback', () => {
 

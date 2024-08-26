@@ -1,6 +1,6 @@
-const { expect } = require("chai");
-const sinon = require("sinon");
-const proxyquire = require("proxyquire");
+import { expect } from "chai";
+import sinon from "sinon";
+import esmock from 'esmock';
 
 describe("database", () => {
   let configObj;
@@ -25,7 +25,12 @@ describe("database", () => {
   function mockClient() {
     return {
       db: sinon.stub().returns({ the: "db" }),
-      close: "theCloseFnFromMongoClient"
+      close: "theCloseFnFromMongoClient",
+      s: {
+        options: {
+          dbName: "testDb"
+        }
+      }
     };
   }
 
@@ -43,16 +48,16 @@ describe("database", () => {
     };
   }
 
-  beforeEach(() => {
+  beforeEach(async () => {
     configObj = createConfigObj();
     client = mockClient();
     config = mockConfig();
     mongodb = mockMongodb();
 
-    database = proxyquire("../../lib/env/database", {
-      "./config": config,
-      mongodb
-    });
+    database = (await esmock("../../lib/env/database", {
+      "../../lib/env/config.js": config,
+      "mongodb": mongodb
+    })).default;
   });
 
   describe("connect()", () => {
@@ -71,7 +76,7 @@ describe("database", () => {
       expect(client.db.getCall(0).args[0]).to.equal("testDb");
       expect(result.db).to.deep.equal({
         the: "db",
-        close: "theCloseFnFromMongoClient"
+        close: "theCloseFnFromMongoClient"  
       });
       expect(result.client).to.deep.equal(client);
     });

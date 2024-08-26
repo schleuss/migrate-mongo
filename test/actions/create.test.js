@@ -1,10 +1,11 @@
-const {
-  expect
-} = require("chai");
-const sinon = require("sinon");
-const path = require("path");
+import { expect } from "chai";
+import sinon from "sinon";
+import path from "path";
+import esmock from 'esmock';
 
-const proxyquire = require("proxyquire");
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+const __dirname = path.dirname(__filename); // get the name of the directory
 
 describe("create", () => {
   let create;
@@ -32,13 +33,13 @@ describe("create", () => {
     };
   }
 
-  beforeEach(() => {
+  beforeEach(async () => {
     migrationsDir = mockMigrationsDir();
     config = mockConfig();
     fs = mockFs();
-    create = proxyquire("../../lib/actions/create", {
-      "../env/migrationsDir": migrationsDir,
-      "../env/config": config,
+    create = await esmock("../../lib/actions/create.js", {
+      "../../lib/env/migrationsDir.js": migrationsDir,
+      "../../lib/env/config.js": config,
       "fs-extra": fs
     });
   });

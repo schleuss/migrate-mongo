@@ -1,7 +1,6 @@
-const { expect } = require("chai");
-const sinon = require("sinon");
-
-const proxyquire = require("proxyquire");
+import { expect } from "chai";
+import sinon from "sinon";
+import esmock from 'esmock';
 
 describe("up", () => {
   let up;
@@ -84,15 +83,15 @@ describe("up", () => {
     };
   }
 
-  function loadUpWithInjectedMocks() {
-    return proxyquire("../../lib/actions/up", {
-      "./status": status,
-      "../env/config": config,
-      "../env/migrationsDir": migrationsDir
+  async function loadUpWithInjectedMocks() {
+    return esmock("../../lib/actions/up", import.meta.url, {
+      "../../lib/actions/status.js": status,
+      "../../lib/env/config.js": config,
+      "../../lib/env/migrationsDir.js": migrationsDir
     });
   }
 
-  beforeEach(() => {
+  beforeEach(async () => {
     firstPendingMigration = mockMigration();
     secondPendingMigration = mockMigration();
     changelogCollection = mockChangelogCollection();
@@ -103,7 +102,7 @@ describe("up", () => {
     db = mockDb();
     client = mockClient();
 
-    up = loadUpWithInjectedMocks();
+    up = await loadUpWithInjectedMocks();
   });
 
   it("should fetch the status", async () => {
@@ -137,7 +136,7 @@ describe("up", () => {
       }
     };
     migrationsDir = mockMigrationsDir();
-    up = loadUpWithInjectedMocks();
+    up = await loadUpWithInjectedMocks();
     await up(db, client);
   });
 
@@ -148,7 +147,7 @@ describe("up", () => {
       }
     };
     migrationsDir = mockMigrationsDir();
-    up = loadUpWithInjectedMocks();
+    up = await loadUpWithInjectedMocks();
     await up(db, client);
   });
 

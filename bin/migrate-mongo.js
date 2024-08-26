@@ -1,10 +1,12 @@
 #! /usr/bin/env node
 
-const program = require("commander");
-const _ = require("lodash");
-const Table = require("cli-table3");
-const migrateMongo = require("../lib/migrate-mongo");
-const pkgjson = require("../package.json");
+import { program } from "commander";
+import _ from "lodash";
+import Table from "cli-table3";
+import migrateMongo from "../lib/migrate-mongo.js";
+
+import { createRequire } from "module";
+const pkgjson = createRequire(import.meta.url)("../package.json");
 
 function printMigrated(migrated = []) {
     migrated.forEach(migratedItem => {

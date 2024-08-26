@@ -1,7 +1,6 @@
-const { expect } = require("chai");
-const sinon = require("sinon");
-
-const proxyquire = require("proxyquire");
+import { expect } from "chai";
+import sinon from  "sinon";
+import esmock from 'esmock';
 
 describe("status", () => {
     let status;
@@ -68,16 +67,16 @@ describe("status", () => {
         };
     }
 
-    beforeEach(() => {
+    beforeEach(async () => {
         changelogCollection = mockChangelogCollection();
 
         migrationsDir = mockMigrationsDir();
         config = mockConfig();
         fs = mockFs();
         db = mockDb();
-        status = proxyquire("../../lib/actions/status", {
-            "../env/migrationsDir": migrationsDir,
-            "../env/config": config,
+        status = await esmock("../../lib/actions/status.js", {
+            "../../lib/env/migrationsDir.js": migrationsDir,
+            "../../lib/env/config.js": config,
             "fs-extra": fs
         });
     });

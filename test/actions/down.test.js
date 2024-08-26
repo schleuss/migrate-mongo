@@ -1,7 +1,6 @@
-const { expect } = require("chai");
-const sinon = require("sinon");
-
-const proxyquire = require("proxyquire");
+import { expect } from "chai";
+import sinon from "sinon";
+import esmock from 'esmock';
 
 describe("down", () => {
   let down;
@@ -66,15 +65,15 @@ describe("down", () => {
     };
   }
 
-  function loadDownWithInjectedMocks() {
-    return proxyquire("../../lib/actions/down", {
-      "./status": status,
-      "../env/config": config,
-      "../env/migrationsDir": migrationsDir
+  async function loadDownWithInjectedMocks() {
+    return await esmock("../../lib/actions/down.js", {
+      "../../lib/actions/status.js": status,
+      "../../lib/env/config.js": config,
+      "../../lib/env/migrationsDir.js": migrationsDir
     });
   }
 
-  beforeEach(() => {
+  beforeEach(async () => {
     migration = mockMigration();
     changelogCollection = mockChangelogCollection();
 
@@ -84,7 +83,7 @@ describe("down", () => {
     db = mockDb();
     client = mockClient();
 
-    down = loadDownWithInjectedMocks();
+    down = await loadDownWithInjectedMocks();
   });
 
   it("should fetch the status", async () => {
@@ -121,7 +120,7 @@ describe("down", () => {
       }
     };
     migrationsDir = mockMigrationsDir();
-    down = loadDownWithInjectedMocks();
+    down = await loadDownWithInjectedMocks();
     await down(db, client);
   });
 
@@ -132,14 +131,14 @@ describe("down", () => {
       }
     };
     migrationsDir = mockMigrationsDir();
-    down = loadDownWithInjectedMocks();
+    down = await loadDownWithInjectedMocks();
     await down(db);
   });
 
   /* eslint no-unused-vars: "off" */
   it("should allow downgrade to return promise", async () => {
     migrationsDir = mockMigrationsDir();
-    down = loadDownWithInjectedMocks();
+    down = await loadDownWithInjectedMocks();
     await down(db);
     expect(migration.down.called).to.equal(true);
   });

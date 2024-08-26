@@ -1,4 +1,5 @@
-module.exports = {
+export default {
+
   async up(db, client) {
     // TODO write your migration here.
     // See https://github.com/seppevs/migrate-mongo/#creating-a-new-migration-script
@@ -11,4 +12,5 @@ module.exports = {
     // Example:
     // await db.collection('albums').updateOne({artist: 'The Beatles'}, {$set: {blacklisted: false}});
   }
+
 };
